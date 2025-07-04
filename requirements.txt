@@ -1,0 +1,6 @@
+unidecode
+matplotlib
+pandas
+seaborn
+numpy
+scikit-learn
