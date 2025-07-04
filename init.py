@@ -1,6 +1,7 @@
 from tkinter import *
-from tkinter import ttk
-from tkinter import messagebox
+from tkinter import ttk, messagebox
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
 from functions import forecast
 
 # Função para validar entrada numérica (inteiros ou decimais)
@@ -22,7 +23,6 @@ def realizar_previsao():
             'rio_taio': float(entry_nivel_taio.get()) if entry_nivel_taio.get() else None,
             'chuva_taio': float(entry_chuva_taio.get()) if entry_chuva_taio.get() else None,
         }
-        print(dados)
 
         resultados = forecast(dados)
 
@@ -30,22 +30,46 @@ def realizar_previsao():
             messagebox.showinfo("Sem resultados", "Não há dados suficientes para previsão.")
             return
 
-        # Criação de nova janela para exibir os resultados
         resultado_janela = Toplevel(root)
         resultado_janela.title("Resultados da Previsão")
-        resultado_janela.geometry("500x300")
+        resultado_janela.geometry("1000x500")
+        resultado_janela.geometry(f"{1000}x{500}+{(largura_tela // 2) - (1000 // 2)}+{(altura_tela // 2) - (500 // 2)}")
 
         ttk.Label(resultado_janela, text="Resultados da Previsão", font=("Helvetica", 14, "bold")).pack(pady=10)
 
-        frame_resultado = ttk.Frame(resultado_janela, padding=10)
-        frame_resultado.pack(expand=True, fill=BOTH)
+        main_frame = Frame(resultado_janela)
+        main_frame.pack(fill=BOTH, expand=True)
+
+        frame_tabela = Frame(main_frame)
+        frame_tabela.pack(side=LEFT, fill=BOTH, expand=True, padx=10, pady=10)
+
+        tabela = ttk.Treeview(frame_tabela, columns=("Modelo", "Previsão"), show="headings")
+        tabela.heading("Modelo", text="Modelo")
+        tabela.heading("Previsão", text="Previsão (nível)")
+        tabela.pack(fill=BOTH, expand=True)
+
+        valores_histograma = []
 
         for modelo, previsao in resultados:
-            texto = f"{modelo}: {previsao:.2f}"
-            ttk.Label(frame_resultado, text=texto, font=("Helvetica", 12)).pack(anchor=W, pady=2)
+            tabela.insert("", "end", values=(modelo, f"{previsao:.2f}"))
+            valores_histograma.append(previsao)
+
+        frame_grafico = Frame(main_frame)
+        frame_grafico.pack(side=RIGHT, fill=BOTH, expand=True, padx=10, pady=10)
+
+        fig, ax = plt.subplots(figsize=(5, 4))
+        ax.hist(valores_histograma, bins=5, edgecolor='black', color='skyblue')
+        ax.set_title('Distribuição das Previsões')
+        ax.set_xlabel('Valor da Previsão')
+        ax.set_ylabel('Frequência')
+
+        canvas = FigureCanvasTkAgg(fig, master=frame_grafico)
+        canvas.draw()
+        canvas.get_tk_widget().pack(fill=BOTH, expand=True)
 
     except ValueError:
         messagebox.showerror("Erro de entrada", "Por favor, insira apenas valores numéricos válidos.")
+
 
 # Janela principal
 root = Tk()
@@ -101,6 +125,6 @@ entry_chuva_taio.grid(row=2, column=1, pady=5)
 ttk.Button(frm, text="Realizar previsão", command=realizar_previsao).grid(row=2, column=0, columnspan=2, pady=20)
 
 # Botão Sair
-# ttk.Button(frm, text="Sair", command=root.destroy).grid(row=3, column=0, columnspan=2)
+ttk.Button(frm, text="Sair", command=root.destroy).grid(row=3, column=0, columnspan=2)
 
 root.mainloop()

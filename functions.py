@@ -6,6 +6,7 @@ model_only_niveis = joblib.load('./models/only_niveis.pkl')
 model_only_chuva = joblib.load('./models/only_chuva.pkl')
 model_only_itu = joblib.load('./models/only_itu.pkl')
 model_only_taio = joblib.load('./models/only_taio.pkl')
+
 import numpy as np
 import math
 
