@@ -31,7 +31,7 @@ RiverLevelForecastRSL/
 ├── functions.py            # Arquivo com funções auxiliares
 ├── main.ipynb              # Jupyter Notebook com análise e testes do modelo
 ├── dataset.csv             # CSV dos dados analisados
-├──FinalRL                  # Artigo do trabalho - Notebook
+├── FinalRL                  # Artigo do trabalho - Notebook
 └── models/                 # Modelos treinados
 
 ```
