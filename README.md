@@ -47,7 +47,7 @@ RiverLevelForecastRSL/
 Clone o repositório:
 
 ```bash
-git clone https://github.com/seuusuario/RiverLevelForecastRSL.git
+git clone https://github.com/Pedro-IFC/RiverLevelForecastRSL.git
 cd RiverLevelForecastRSL
 ``` 
 Crie um ambiente virtual (opcional, mas recomendado):
